@@ -1,0 +1,809 @@
+
+CREATE TABLE COUNTRIES
+ (
+ CountryID     INT ,
+ CountryCode   CHAR(2),
+ CountryName   VARCHAR(20)
+ );
+
+INSERT INTO Countries (Countryid,Countrycode,CountryName)  VALUES ( 01 , 'US' , 'United States');
+
+INSERT INTO Countries (Countrycode,CountryName,Countryid)  VALUES ( 'IN' , 'India' , 02);
+
+INSERT INTO Countries (CountryName,Countryid)  VALUES (  'Canada' , 03);
+
+INSERT INTO Countries (Countrycode,CountryName,Countryid)  VALUES ( NULL , 'United Kingdom' , 04);
+
+INSERT INTO COUNTRIES (Countrycode,CountryName,Countryid) VALUES ('ME', 'UNITED ARAB EMIRATES', 03);
+
+
+
+SELECT * FROM COUNTRIES ;
+
+UPDATE COUNTRIES SET countrycode = 'USA' where countryid = 1;
+
+DELETE FROM COUNTRIES where countryid = 3;
+
+TRUNCATE TABLE COUNTRIES;
+
+DROP TABLE COUNTRIES;
+
+ALTER TABLE COUNTRIES ALTER COLUMN Countrycode CHAR(3)
+
+ALTER TABLE COUNTRIES ADD Latitude DECIMAL(7,5),Longitude DECIMAL(7,5)
+
+
+
+CREATE TABLE dept
+(
+deptno INT PRIMARY KEY, -- not null+ unique
+dname VARCHAR(20),
+loc VARCHAR(10)
+);
+
+INSERT INTO dept VALUES (40,'ACCOUNTING','NEW YORK');	
+INSERT INTO dept VALUES (20,'RESEARCH','DALLAS');
+INSERT INTO dept VALUES (30,'SALES','CHICAGO');
+INSERT INTO dept VALUES (10,'OPERATIONS','BOSTON');
+
+
+SELECT * FROM DEPT;
+
+CREATE TABLE emp
+(
+empno INT PRIMARY KEY,  -- combination of unique and not null
+ename VARCHAR(20) NOT NULL,  -- cannot leave blank  
+job VARCHAR(10) DEFAULT 'CLERK',  -- if not job is entered SQL will put Clerk 
+mgr INT,
+hiredate DATE,
+sal DECIMAL(9,2) check(sal>0),  -- check if salary is negative
+comm DECIMAL(7,2),
+deptno INT,
+CONSTRAINT FK_DEPTNO foreign key (deptno) references dept (deptno)  -- set foreign key constraint on the dept
+);
+
+
+INSERT INTO emp VALUES (7369,'SMITH','CLERK',7902,'1890-12-17',800,NULL,20);  
+INSERT INTO emp VALUES (7499,'ALLEN','SALESMAN',7698,'1981-02-20',1600,300,30);
+INSERT INTO emp VALUES (7521,'WARD','SALESMAN',7698,'1981-02-22',1250,500,30);
+INSERT INTO emp VALUES (7566,'JONES','MANAGER',7839,'1981-04-02',2975,NULL,20);
+INSERT INTO emp VALUES (7654,'MARTIN','SALESMAN',7698,'1981-09-28',1250,1400,30);
+INSERT INTO emp VALUES (7698,'BLAKE','MANAGER',7839,'1981-05-01',2850,NULL,30);
+INSERT INTO emp VALUES (7782,'CLARK','MANAGER',7839,'1981-06-09',2450,NULL,10);
+INSERT INTO emp VALUES (7788,'SCOTT','ANALYST',7566,'1987-04-19',3000,NULL,20);
+INSERT INTO emp VALUES (7839,'KING','PRESIDENT',NULL,'1981-11-17',5000,NULL,10);
+INSERT INTO emp VALUES (7844,'TURNER','SALESMAN',7698,'1981-09-08',1500,0,30);
+INSERT INTO emp(empno,ename,mgr,hiredate,sal,Comm,deptno) VALUES (7876,'ADAMS',7788,'1987-05-23',1100,NULL,20);
+INSERT INTO emp VALUES (7900,'JAMES','CLERK',7698,'1981-12-03',950,NULL,20);  
+INSERT INTO emp VALUES (7902,'FORD','ANALYST',7566,'1981-12-03',3000,NULL,20);
+INSERT INTO emp VALUES (7934,'MILLER','CLERK',7782,'1982-01-23',1300,NULL,10);
+INSERT INTO emp VALUES (2356,'MILLER','CLERK',7782,'1982-01-23',1300,NULL,NULL);
+
+
+
+
+SELECT * FROM EMP
+
+
+ -- System defined Functions : 
+
+SELECT 1+1;
+Select UPPER('arif');
+Select LOWER('Arif');
+select LEN('Arifkaladgi');
+select Right('Arifkaladgi',5);
+select substring('Arifkaladgi',4,5);
+select substring('Arifkaladgi',4,LEN('Arifkaladgi'));
+select floor(1.80);  --  Result is lower integer number 
+select Ceiling(3.1);  -- Result is higher integer number
+select Round(3.556, 2);
+select ROUND(3.512,2)
+
+select getdate();
+select convert(date, GETDATE());
+
+SELECT CHARINDEX ('R','MOHAMMAD ARIF')
+
+select Year(getdate());
+select month(getdate());
+select MONTH(getdate());  
+select DATENAME( WEEKDAY , getdate());
+select left(getdate(),10);
+
+
+SELECT DATENAME(year, getdate()) as "Year" 
+      ,DATENAME(month, getdate()) as "Month"   
+      ,DATENAME(day, getdate())  as "Day" 
+      ,DATENAME(dayofyear, getdate()) as "Day of Year"  
+      ,DATENAME(weekday, getdate())as "Weekday" ; 
+
+
+DECLARE @ename VARCHAR(20)= 'Niveditha Shah';
+select LEFT(@ename,CHARINDEX (' ',@ename)) as FirstName;
+select substring(@ename,CHARINDEX (' ',@ename) ,LEN(@ename))as LastName;
+
+
+SELECT  Ename, Sal FROM  Emp 
+			WHERE DATEDIFF(day,Hiredate,getdate()) > 365*2;
+
+Select Ename, hiredate, sal
+	from emp
+	where Year(getdate()) - year(hiredate) >2;
+
+	SELECT  distinct Job FROM  Emp ;
+
+
+	SELECT  Ename FROM  Emp 
+				WHERE comm IS NULL OR Comm = 0;
+
+    select ename , job, sal from EMP
+	         ORDER BY Job ASC , Sal DESC
+
+SELECT  deptno, AVG(Sal), count(empno) FROM  Emp 
+		GROUP  BY Deptno
+		having count(empno) > 5
+
+
+select E.empno , 
+       E.ename ,
+	   E.deptno ,
+	   D.dname
+  FROM EMP as E LEFT JOIN DEPT as D ON E.deptno = D.deptno
+
+
+create table job_grades
+(
+   grade char(1),
+   lowest_sal int,
+   highest_sal int
+  );
+
+  insert into job_grades values
+  ('A', 0, 999),
+  ('B', 1000, 1999),
+  ('C', 2000, 2999), 
+  ('D', 3000, 3999),
+  ('E', 4000, 5000);
+
+  select * from job_grades
+
+select E.empno , 
+       E.ename ,
+	   E.deptno ,
+	   D.dname,
+	   E.Sal,
+	   JG.grade
+  FROM EMP as E LEFT JOIN DEPT as D ON E.deptno = D.deptno
+                LEFT JOIN job_grades JG ON E.sal Between jg.lowest_sal and jg.highest_sal
+
+
+
+SELECT E1.Ename as Employee,
+       E2.Ename as Manager
+	   FROM EMP as E1 LEFT JOIN EMP as E2 ON E1.mgr = E2.empno
+
+
+
+Alter Table EMP DROP Constraint FK_DEPTNO;
+
+INSERT INTO emp VALUES (1234,'ARIF','CLERK',7782,'1982-01-23',1300,NULL,50);
+INSERT INTO emp VALUES (5678,'SURESH','CLERK',7782,'1982-01-23',1300,NULL,60);
+
+select * from EMP order by deptno;
+select * from Dept order by deptno;
+
+
+ select e.EMPNO,
+        e.ENAME,
+	    d.DEPTNO ,
+		e.deptno,
+		d.DNAME  
+		from emp e 
+		FULL OUTER join dept d 
+		on e.DEPTNO = d.DEPTNO order by e.deptno;
+
+
+
+  create TABLE SALESPEOPLE(
+   snum int primary key,
+   sname varchar(20),
+   city varchar(20),
+   comm decimal(3,2) 
+);
+
+insert into SALESPEOPLE values (1001,'Peel','London',.12);
+insert into SALESPEOPLE values (1002,'Serres','San Jose',.13);
+insert into SALESPEOPLE values (1004,'Motika','London',.11);
+insert into SALESPEOPLE values (1007,'Rafkin','Barcelona',.15);
+insert into SALESPEOPLE values (1003,'Axelrod','New york',.1);
+
+create table cust(
+cnum int primary key,
+cname varchar(20),
+city varchar (20),
+rating int,
+snum int,
+foreign key (snum) references salespeople (snum)
+);
+insert into cust values (2001, 'Hoffman', 'London', 100, 1001);
+insert into cust values (2002, 'Giovanne', 'Rome', 200, 1003);
+insert into cust values (2003, 'Liu', 'San Jose', 300, 1002);
+insert into cust values (2004, 'Grass', 'Berlin', 100, 1002);
+insert into cust values (2006, 'Clemens', 'London', 300, 1007);
+insert into cust values (2007, 'Pereira', 'Rome', 100, 1004);
+insert into cust values (2008, 'James', 'London', 200, 1007);
+
+
+create table orders(
+onum int primary key,
+amt decimal (7,2),
+odate date,
+cnum int ,
+snum int ,
+foreign key (Cnum) references cust (cnum),
+foreign key (snum) references SALESPEOPLE (snum)
+);
+insert into orders values(3001, 18.69, '1994-10-03', 2008, 1007);
+insert into orders values(3003, 767.19, '1994-10-03', 2001, 1001);
+insert into orders values(3002, 1900.10, '1994-10-03', 2007, 1004);
+insert into orders values(3005, 5160.45 , '1994-10-03', 2003, 1002);
+insert into orders values(3006, 1098.16, '1994-10-04', 2008, 1007);
+insert into orders values(3009, 1713.23 , '1994-10-04', 2002, 1003);
+insert into orders values(3007, 75.75 , '1994-10-05', 2004, 1002);
+insert into orders values(3008, 4723.00 , '1994-10-05', 2006, 1001);
+insert into orders values(3010, 1309.95  , '1994-10-06', 2004, 1002);
+insert into orders values(3011, 9891.88  , '1994-10-06', 2006, 1001);
+
+select * from ORDERS;
+select * from CUST;
+select * from SALESPEOPLE;
+
+--Write a Query that that selects highest rating in each city
+select city, max(rating) from cust Group By city;
+
+
+
+--Write a Query that that selects each customer’s smallest order
+select cname,min(amt) from orders o 
+  INNER JOIN cust C on o.cnum = c.cnum
+ Group By cname;
+
+
+--Write a Query that that counts all orders for October 10,90
+select count(onum) as "Oder on October 03,90" from orders where odate = '1990-10-03'
+
+
+
+-- Write a Query that that counts no. of different cities in customer 
+select count( Distinct city) from cust;
+
+
+-- Write a Query that that counts no. of salespeople registering orders for each date
+
+select count(distinct snum), odate as "No. of salespeople registering orders" 
+   from orders Group by odate;
+
+--Write a Query that that selects largest order taken by each salesperson on each date.
+
+select odate,snum,Max(amt) from orders Group by odate,snum;
+
+
+-- Modify above query to select only maximum purchase amount over 3000.
+   select odate,snum,Max(amt) from orders Group by odate,snum having Max(amt) >= 3000
+
+--Write a Query that that selects the first customer in alphabetical order whose name begin with G
+  select top 1 cname from cust where cname like 'G%' order by cname ASC;
+
+
+  1.Write a query to match the salespeople to the customers according to the city they are living.
+
+select c.cname, c.city, s.sname , s.city
+from cust c inner join salespeople s on s.city = c.city
+;
+
+
+2.Write a query to select the names of customers and the salespersons who are providing service to them.
+
+select c.cname,s.sname
+from cust c
+left join salespeople s
+on c.snum = s.snum
+
+3.Write a query to find out all orders by customers not located in the same cities as that of their salespeople
+
+select  o.onum,
+        c.cname,
+        c.city as custcity, 
+        s.sname, 
+        s.city as scity
+from orders o
+inner join cust c
+on o.cnum = c.cnum
+inner join salespeople s
+on o.snum = s.snum
+where s.city <> c.city
+order by onum
+
+
+4.Write a query that lists each order number followed by name of customer who made that order
+select o.onum,
+		c.cname
+		from orders o
+		join cust c
+		on o.cnum=c.cnum
+5.Write a query that finds all pairs of customers having the same rating…………………
+
+select c1.cname c1,c2.cname c2 ,c1.rating
+from cust c1
+inner join cust c2
+on c1.rating = c2.rating
+where  c1.cnum > c2.cnum
+order by c1.rating
+
+6.Write a query to find out all pairs of customers served by a single salesperson………………..
+
+select c1.cname,c2.cname,c1.snum
+from cust c1
+inner join cust c2
+on c1.snum = c2.snum
+where c1.cname >c2.cname
+
+7.Write a query that produces all pairs of salespeople who are living in same city………………..
+
+select s1.sname,s2.sname,s1.city
+from salespeople s1
+inner join salespeople s2
+on s1.city = s2.city
+where  s1.sname > s2.sname
+
+  Window functions :
+   
+     RANK(),
+	 DENSE_RANK(),
+	 ROW_NUMBER()
+
+-- Write a query to show Empno , Ename , Sal and Rank of the Emp based on the salary.
+
+  Select Empno,
+         Ename,
+		 Sal,
+		 deptno,
+		 Rank() OVer( Order by Sal DESC) as Rank_of_Salary,
+		 Dense_Rank() OVer( Order by Sal DESC) as Dense_Rank_of_Salary,
+		 Row_number() OVer( Order by Sal DESC) as RowNumber_Rank_of_Salary,
+		 Rank() OVer( partition by deptno Order by Sal DESC) as Rank_of_Salary_dept
+		 From EMP
+		 ;
+
+
+Subqueries :
+
+   SELECT * FROM Orders
+WHERE snum IN 
+ (SELECT snum FROM Salespeople
+ WHERE sname = 'Motika' ) ;
+
+
+-- Write a Query to find all orders credited to the same salesperson who services Customer 2008
+ select *from orders where snum in ( select snum from CUST where cnum = 2008)
+
+-- Write a Query to find out all orders that are greater than the average for Oct 4th
+  select *from orders where amt > (select avg(amt) from orders where odate = '1994-10-04')
+
+-- Write a Query to find all orders attributed to salespeople in London
+  select * from orders where snum in (select snum from SALESPEOPLE where city = 'London' )
+
+
+  -- Write a query to Display the emp details whose salary greater then company's average salary
+
+  select * from emp where sal>(select avg(sal) from emp);
+
+  -- Write a query to Display the emp details whose salary greater then their dept's average salary (Corelated Subqueries)
+
+     select * from emp as outertable where sal>(select avg(sal) from emp as innertable
+	                                         where innertable.deptno = outertable.deptno );
+
+     
+	-- Common Table Expressions:  CTE
+	
+	WITH dept_avg_sal as 
+	      ( select deptno,
+		           avg(sal) as avg_sal
+				   from EMP
+				   Group by deptno
+		  )		      
+      
+	  select * from EMP as E
+	       INNER JOIN dept_avg_sal as das ON e.deptno = das.deptno
+		   Where e.sal > das.avg_sal
+
+
+ 1. Use CTE to display list of managers from EMP table who has atleast one person reporting to them
+   
+     with Mgr_with_Reporting as
+            ( select 
+			     distinct a.mgr,count(empno) as ct from EMP a
+				            group by a.mgr
+							having count(empno) > 0 ) 
+
+         select * from EMP a 
+		   INNER JOIN Mgr_with_Reporting m ON a.empno = m.mgr
+
+
+select * from EMP
+
+1. Case When  :  used in select statement and also outside select statement
+2. if else    :  used only outside the select statement to check conditions
+
+
+1. Write  query to display ename , job and promotion_eligible.
+      promotion_eligible = if exp is greater the 40 then Yes or No.
+	  
+ select 
+      ename ,
+	  job ,
+	  datediff(year,hiredate,getdate()) as Experience,
+	  case 
+	   when datediff(year,hiredate,getdate())>=40 then 'Yes'
+	   when datediff(year,hiredate,getdate()) < 40 then 'No'
+	  END as  promotion_eligible
+	  From EMP;	   
+
+
+ename , job , exp , Emp_tier
+       Exp:   less than 20  : tier 4
+		 20- 29  : tier 3
+		 30- 39  : tier 2
+		 40 and above tier 1
+
+
+select
+ename,
+job,
+dbo.emp_exp(Hiredate) as experience,
+case 
+when dbo.emp_exp(Hiredate) < 20 then 'Ter 4'
+when dbo.emp_exp(Hiredate) between 20 and 29 then 'Ter 3'
+when dbo.emp_exp(Hiredate) between 30 and 39 then 'Ter 2'
+when dbo.emp_exp(Hiredate) >= 40 then 'Ter 1'
+end as emp_tier
+from emp;
+
+
+CREATE FUNCTION Emp_Exp (@vHiredate date )
+RETURNS INT
+  BEGIN
+        DECLARE @vExp INT;
+      SET @vExp = year(getdate()) - year(@vHiredate)
+      RETURN @vExp
+  END 
+
+
+
+   CREATE OR ALTER FUNCTION Emp_Tier (@vHiredate date )
+RETURNS VARCHAR(10)
+  BEGIN
+      DECLARE @vExp INT,
+		      @vtier VARCHAR(10);
+      SET @vExp = dbo.Emp_Exp(@vHiredate);
+	SET @vtier =
+	   case 
+       when @vExp < 20 then 'Tier 4'
+       when @vExp between 20 and 29 then 'Tier 3'
+       when @vExp between 30 and 39 then 'Tier 2'
+       when @vExp >= 40 then 'Tier 1'
+       end ;
+      RETURN @vtier
+  END 
+
+
+  select
+ename,
+job,
+dbo.emp_exp(Hiredate) as experience,
+dbo.emp_tier(Hiredate) as emp_tier
+from emp;
+
+ Create a function to calculate comm hike
+            if the emp comm is Null or 0 then its 200 
+			else 10% hike in comm
+
+CREATE OR ALTER function Comm_hike (@empno INT)
+RETURNS FLOAT
+   BEGIN
+        DECLARE @vComm FLOAT;
+	    SELECT @vComm = Comm from EMP where Empno = @empno;
+	    IF @vComm is NULL or @vComm = 0
+		  BEGIN
+		  SET @vComm = 200
+		  END
+        ELSE
+		  BEGIN
+		  SET @vComm = @vcomm*1.1
+          END
+    
+     RETURN @vcomm
+   END
+
+
+Select ename, 
+       job,
+	   comm ,
+	   dbo.comm_hike(empno) as NewComm from EMP
+
+
+   
+
+CREATE FUNCTION Empdetails (@deptno INT)
+RETURNS TABLE
+
+     RETURN Select * from EMP where Deptno = @Deptno
+
+
+	 select * from dbo.Empdetails(30)
+
+
+
+
+ Create a SP to check the emp comm  
+   take input as empno, 
+    if the commission in NULL then update commission to 200 else if there is comm then increment by 10%
+
+
+   CREATE OR ALTER PROCEDURE sp_Comm_hike (@empno INT)
+   AS
+   BEGIN
+     DECLARE @Comm FLOAT;
+	    SELECT @Comm = Comm from EMP where Empno = @empno;
+	    IF @Comm is NULL or @Comm = 0
+		  BEGIN
+		  UPDATE EMP SET Comm = 200 where empno = @empno
+		  END
+        ELSE
+		  BEGIN
+		  UPDATE EMP SET Comm = Comm * 1.1 where empno = @empno 
+          END
+   END
+
+
+select * from EMP	
+
+ EXECUTE sp_Comm_hike 2564
+
+ select * from Customer;
+
+ Write a query to show the list of Customer age band and count of Customers
+    Age : 0-9 , 10-19, 20-29 , 30-39...................90-99
+
+Create a Function to take input as Age and return the age_band
+
+   CREATE OR ALTER FUNCTION Age_Band (@vDateofBirth date )
+RETURNS VARCHAR(10)
+  BEGIN
+  DECLARE @Age Int,@vAgeBand varchar(10); 
+   set @Age = year(GETDATE())- year(@vDateofBirth)
+    IF @Age BETWEEN 0 AND 9 
+        SET @vAgeBand = '0-9';
+    ELSE IF @Age BETWEEN 10 AND 19 
+        SET @vAgeBand = '10-19';
+    ELSE IF @Age BETWEEN 20 AND 29 
+        SET @vAgeBand = '20-29';
+    ELSE IF @Age BETWEEN 30 AND 39 
+        SET @vAgeBand = '30-39';
+    ELSE IF @Age BETWEEN 40 AND 49 
+        SET @vAgeBand = '40-49';
+    ELSE IF @Age BETWEEN 50 AND 59 
+        SET @vAgeBand = '50-59';
+    ELSE IF @Age BETWEEN 60 AND 69 
+        SET @vAgeBand = '60-69';
+    ELSE IF @Age BETWEEN 70 AND 79 
+        SET @vAgeBand = '70-79';
+    ELSE IF @Age BETWEEN 80 AND 89 
+        SET @vAgeBand = '80-89';
+    ELSE 
+        SET @vAgeBand = '90-99';
+      RETURN @vAgeBand
+  END 
+
+
+  with CustomerAgeBand as 
+    (select "Customer ID",
+	      [customer Name],
+		   [Date of Birth],
+		    dbo.age_band([Date of Birth]) as AgeBand 
+			 from customer)
+     select 
+	    Ageband,
+		count(*) as CountCustomers
+		   from CustomerAgeBand 
+	group by Ageband
+	Order by 2 desc
+
+
+SELECT dbo.Age_Band([Date of Birth]) AS Age_Band, COUNT(*) AS Customer_Count
+FROM Customer
+GROUP BY dbo.Age_Band([Date of Birth])
+ORDER BY 2 DESC;
+
+
+CREATE OR ALTER PROCEDURE SP_Promotion (@empno INT)
+   AS
+   BEGIN
+     DECLARE @job VARCHAR(10)
+	        ,@deptno INT
+			,@Hiredate date 
+			,@New_Job VARCHAR(20);
+        SELECT @job = job from EMP where Empno = @empno;
+        SELECT @deptno = deptno from EMP where Empno = @empno;
+	    SELECT @Hiredate = hiredate from EMP where Empno = @empno;
+
+		IF @Job IS NOT NULL 
+         BEGIN 
+                 IF @job <> 'PRESIDENT' AND DATEDIFF(year,@Hiredate, Getdate()) > 40	             
+	            	    BEGIN
+	            	      SET @New_Job =  
+		       		    CASE @deptno
+		       		       When 10 Then  'VP OPS'
+		       			   When 20 Then  'VP RES'
+		       			   When 30 Then 'VP SALES'
+		       			   ELSE  'VP ACC'
+                           END	
+						  IF @Job = @New_Job
+						       BEGIN 
+						        PRINT Concat ('The Employee ' ,@Empno , ' Cannot be promoted to same position')
+						        END  
+						  ELSE
+						       BEGIN 	          
+                                  UPDATE EMP SET Job = @New_Job where empno = @empno ;
+								  PRINT Concat ('The Employee ' ,@Empno , ' Promoted as ' , @New_Job)
+						      END
+	            	     END
+                 ELSE
+	            	   BEGIN
+	            	    PRINT Concat ('The Employee ' ,@Empno , ' is not eligible for Promotion')
+                      END
+		 END 		
+		ELSE 
+		    BEGIN
+	            PRINT Concat ('The Employee ' ,@Empno , ' is invalid')
+            END 	  	
+          		 	   	 
+   END
+
+SP_Promotion 1234
+
+select * from Emp
+
+
+
+
+
+ Create a SP to update the employee NewJob promotion Eligibility.
+   Take Input as Deptno and apply the same for all the people in the dept
+        a.emp should be more then 40 years of Exp
+		b.Emp Job Should not be PRESIDENT
+		c. 10	VP OPS
+           20	VP RES
+           30	VP SALES
+           40	VP ACC
+
+ALTER TABLE EMP ADD NewJob VARCHAR(20)
+SELECT *  FROM EMP
+UPDATE EMP set NewJob= NULL
+
+
+CREATE OR ALTER PROCEDURE SP_Promotion_cur (@deptno INT)
+   AS
+   BEGIN
+     DECLARE @job VARCHAR(10)
+	        ,@Empno INT
+			,@Hiredate date 
+			,@New_Job VARCHAR(20);
+   DECLARE EmpCur Cursor
+	     for Select Empno,job,Hiredate from EMP  Where deptno = @deptno
+      OPEN EmpCur
+	    FETCH EmpCur INTO @Empno , @Job , @Hiredate 
+		  WHILE @@FETCH_STATUS = 0
+		    BEGIN
+                     IF @job <> 'PRESIDENT' AND DATEDIFF(year,@Hiredate, Getdate()) > 40	             
+	                	    BEGIN
+	                	      SET @New_Job =  
+		           		         CASE @deptno
+		           		           When 10 Then  'VP OPS'
+		           			       When 20 Then  'VP RES'
+		           			       When 30 Then 'VP SALES'
+		           			       ELSE  'VP ACC'
+                                END		          
+                              UPDATE EMP SET NewJob = @New_Job where empno = @empno ;
+		           		      PRINT Concat ('The Employee ' ,@Empno , ' Promoted as ' , @New_Job)
+	                	    END
+                     ELSE
+	                	   BEGIN
+	                	    PRINT Concat ('The Employee ' ,@Empno , ' is not eligible for Promotion')
+                           END	
+               FETCH EmpCur INTO @Empno , @Job , @Hiredate 
+		   END	   
+		CLOSE EmpCur
+		DEALLOCATE EmpCur   	 
+   END
+
+
+
+  SP_Promotion_cur
+
+  SELECT * from EMP
+
+
+
+ -- Loops and Cursors : 
+
+
+   Declare @count INT = 10
+     BEGIN
+	       WHILE @count <> 0
+	        BEGIN
+		     PRINT Concat ('The output number is ' ,@Count );
+		     SET @Count = @Count -1
+		    END
+     END
+
+
+
+   DECLARE
+	    OPEN
+		FETCH  -- it fetches the data from 1st row in the cursor
+		   While @@FETCH_STATUS = 0  --flag to 0 is any record in the cursor exists , or else its set to 1
+		   Begin
+		    all processing will be done here
+         FETCH  -- it fetches the data from next available row in the cursor
+		   END
+        CLOSE 
+  Deallocate Cursor
+
+
+   DECLARE  @Empno INT
+	       ,@Ename Varchar(15)	; 
+   DECLARE EmpCur Cursor
+	     for Select Empno,Ename from EMP order by empno desc
+
+     OPEN EmpCur
+     
+	 Fetch EmpCur into @Empno,@Ename
+
+	   WHILE @@FETCH_STATUS = 0
+	   BEGIN
+	      Print Concat ('The Empno ',@Empno, ' has the name ' , @EName)
+		 
+		Fetch EmpCur into @Empno,@Ename
+       END
+         Print 'This is the end of the table'
+      CLOSE EmpCur;
+	  Deallocate EmpCur;
+
+
+ CREATE OR ALTER PROCEDURE sp_Comm_hike_Cur
+   AS
+   BEGIN
+     DECLARE @Comm FLOAT,@empno INT;
+	 DECLARE EmpCur Cursor	for Select Empno,Comm from EMP order by empno desc
+        OPEN EmpCur
+	      FETCH Empcur into @empno,@comm 
+            While @@FETCH_STATUS = 0
+              BEGIN
+	               IF @Comm is NULL or @Comm = 0
+		               BEGIN
+		                 UPDATE EMP SET Comm = 200 where empno = @empno
+		               END
+                   ELSE
+		               BEGIN
+		                 UPDATE EMP SET Comm = Comm * 1.1 where empno = @empno 
+                       END
+                FETCH Empcur into @empno,@comm 
+            END
+			CLOSE EmpCur
+			DEALLOCATE EmpCur
+  END
+
+  select * from EMP
+
+  EXEC sp_Comm_hike_Cur
